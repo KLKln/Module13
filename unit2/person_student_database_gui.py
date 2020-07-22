@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import END
 
 
-def create_connection(db):
+def create_connection(db='person_student.db'):
     """ Connect to a SQLite database
     :param db: filename of database
     :return connection if no error, otherwise None"""
