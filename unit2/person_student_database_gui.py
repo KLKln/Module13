@@ -55,7 +55,7 @@ def create_tables(database):
         print("Unable to connect to " + str(database))
 
 
-def create_person():
+def create_person1():
     """conn = sqlite3.connect('person.db')
     c = conn.cursor()
 
@@ -73,14 +73,14 @@ def create_person():
     lastname.delete(0, END)
 
 
-def create_person1(conn, person):
+def create_person(conn, person):
     """Create a new person for table
     :param conn:
     :param person:
     :return: person id
     """
     sql = ''' INSERT INTO person(firstname,lastname)
-              VALUES(?,?) '''
+              VALUES(firstname, firstname, lastname, lastname); '''
     cur = conn.cursor()  # cursor object
     cur.execute(sql, person)
     return cur.lastrowid  # returns the row id of the cursor object, the person id
@@ -99,6 +99,12 @@ def create_student(conn, student):
     return cur.lastrowid  # returns the row id of the cursor object, the student id
 
 
+def person(firstname, lastname):
+    firstname = firstname.get()
+    lastname = lastname.get()
+    return None
+
+
 window = tk.Tk()
 window.title("Person and Student database")
 
@@ -108,9 +114,8 @@ tk.Label(window, text="Last Name:").grid(row=1)
 firstname = tk.Entry(window).grid(row=0, column=1)
 lastname = tk.Entry(window).grid(row=1, column=1)
 
-create_db_table_button = tk.Button(window, text="Create Database and Table",
-                                   command=lambda: [create_connection, create_tables]).grid(row=5, column=2)
-create_person_button = tk.Button(window, text="Add Person", command=create_person).grid(row=3, column=1)
+create_db_table_button = tk.Button(window, text="Create Database and Table", command=lambda: [create_connection('person_student.db'), create_tables('person_student.db')]).grid(row=5, column=2)
+create_person_button = tk.Button(window, text="Add Person", command=create_person(create_connection('person_student.db'), person).grid(row=3, column=1))
 add_student_button = tk.Button(window, text="Add Student", command=create_student).grid(row=4, column=3)
 program_exit_button = tk.Button(window, text="Exit", command=window.quit).grid(row=6, column=2)
 

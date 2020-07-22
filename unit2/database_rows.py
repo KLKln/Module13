@@ -24,7 +24,7 @@ def create_person(conn, person):
               VALUES(?,?) '''
     cur = conn.cursor()  # cursor object
     cur.execute(sql, person)
-    return cur.lastrowid # returns the row id of the cursor object, the person id
+    return cur.lastrowid  # returns the row id of the cursor object, the person id
 
 
 def create_student(conn, student):
