@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import END
 
 
-def create_connection(db='person_student.db'):
+def create_connection(db):
     """ Connect to a SQLite database
     :param db: filename of database
     :return connection if no error, otherwise None"""
@@ -79,10 +79,13 @@ def create_person(conn, person):
     :param person:
     :return: person id
     """
-    sql = ''' INSERT INTO person(firstname,lastname)
-              VALUES(firstname, firstname, lastname, lastname); '''
+    sql = ''' INSERT INTO person  
+              VALUES(firstname, lastname)'''
     cur = conn.cursor()  # cursor object
     cur.execute(sql, person)
+
+    firstname.delete(0, END)
+    lastname.delete(0, END)
     return cur.lastrowid  # returns the row id of the cursor object, the person id
 
 
@@ -100,9 +103,31 @@ def create_student(conn, student):
 
 
 def person(firstname, lastname):
-    firstname = firstname.get()
-    lastname = lastname.get()
-    return None
+    """Create a person to pass in to db
+    :param firstname
+    :param lastname
+    :return firstname, lastname"""
+    firstname = firstname
+    lastname = lastname
+    return firstname, lastname
+
+
+def query():
+    conn = sqlite3.connect('person_student.db')
+    cur = conn.cursor()
+
+    cur.execute("SELECT *, oid FROM person")
+    records = cur.fetchall()
+
+    print_records = ''
+    for record in records:
+        print_records += str(record) + "\n"
+
+    query_label = tk.Label(window, text=print_records).grid(row=8, column=0)
+
+    conn.commit()
+    conn.close()
+    return
 
 
 window = tk.Tk()
@@ -115,9 +140,10 @@ firstname = tk.Entry(window).grid(row=0, column=1)
 lastname = tk.Entry(window).grid(row=1, column=1)
 
 create_db_table_button = tk.Button(window, text="Create Database and Table", command=lambda: [create_connection('person_student.db'), create_tables('person_student.db')]).grid(row=5, column=2)
-create_person_button = tk.Button(window, text="Add Person", command=create_person(create_connection('person_student.db'), person).grid(row=3, column=1))
+create_person_button = tk.Button(window, text="Add Person", command=lambda: [create_person(create_connection('person_student.db'), create_person(create_connection('person_student.db'), person))]).grid(row=3, column=1)
 add_student_button = tk.Button(window, text="Add Student", command=create_student).grid(row=4, column=3)
-program_exit_button = tk.Button(window, text="Exit", command=window.quit).grid(row=6, column=2)
+query = tk.Button(window, text="Show Records", command=query).grid(row=6, column=2)
+program_exit_button = tk.Button(window, text="Exit", command=window.quit).grid(row=7, column=2)
 
 tk.Label(window, text="id:").grid(row=0, column=2)
 tk.Label(window, text="Major:").grid(row=1, column=2)
