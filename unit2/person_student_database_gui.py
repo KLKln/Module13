@@ -84,8 +84,8 @@ def create_person(conn, person):
     cur = conn.cursor()  # cursor object
     cur.execute(sql, person)
 
-    firstname.delete(0, END)
-    lastname.delete(0, END)
+    #firstname.delete(0, END)
+    #lastname.delete(0, END)
     return cur.lastrowid  # returns the row id of the cursor object, the person id
 
 
@@ -95,8 +95,8 @@ def create_student(conn, student):
     :param student:
     :return: student id
     """
-    sql = ''' INSERT INTO student(id, major, begin_date)
-              VALUES('id': id.get(), 'major': major.get(), 'begin_date': begin_date.get()) '''
+    sql = ''' INSERT INTO student
+              VALUES(id, major, begin_date '''
     cur = conn.cursor()  # cursor object
     cur.execute(sql, student)
     return cur.lastrowid  # returns the row id of the cursor object, the student id
@@ -107,12 +107,20 @@ def person(firstname, lastname):
     :param firstname
     :param lastname
     :return firstname, lastname"""
-    firstname = firstname
-    lastname = lastname
-    return firstname, lastname
+    firstname = firstname.get()
+    lastname = lastname.get()
+    return person
 
 
-def query():
+def student(id, major, begin_date):
+    id = id.get()
+    major = major.get()
+    begin_date = begin_date.get()
+
+    return student
+
+
+def view_person():
     conn = sqlite3.connect('person_student.db')
     cur = conn.cursor()
 
@@ -141,16 +149,17 @@ lastname = tk.Entry(window).grid(row=1, column=1)
 
 create_db_table_button = tk.Button(window, text="Create Database and Table", command=lambda: [create_connection('person_student.db'), create_tables('person_student.db')]).grid(row=5, column=2)
 create_person_button = tk.Button(window, text="Add Person", command=lambda: [create_person(create_connection('person_student.db'), create_person(create_connection('person_student.db'), person))]).grid(row=3, column=1)
-add_student_button = tk.Button(window, text="Add Student", command=create_student).grid(row=4, column=3)
-query = tk.Button(window, text="Show Records", command=query).grid(row=6, column=2)
-program_exit_button = tk.Button(window, text="Exit", command=window.quit).grid(row=7, column=2)
+add_student_button = tk.Button(window, text="Add Student", command=lambda: [create_student(create_connection('person_student.db'), create_student(create_connection('person_student.db'), student))]).grid(row=4, column=3)
+view_person_button = tk.Button(window, text="View Person Table").grid(row=6, column=2)
+view_student_button = tk.Button(window, text="View Student Table", command=query).grid(row=7, column=2)
+program_exit_button = tk.Button(window, text="Exit", command=window.quit).grid(row=8, column=2)
 
 tk.Label(window, text="id:").grid(row=0, column=2)
 tk.Label(window, text="Major:").grid(row=1, column=2)
 tk.Label(window, text="Date Started:").grid(row=2, column=2)
 
-id_entry = tk.Entry(window).grid(row=0, column=3)
-major_entry = tk.Entry(window).grid(row=1, column=3)
-date_started_entry = tk.Entry(window).grid(row=2, column=3)
+id = tk.Entry(window).grid(row=0, column=3)
+major = tk.Entry(window).grid(row=1, column=3)
+date_started = tk.Entry(window).grid(row=2, column=3)
 
 window.mainloop()
